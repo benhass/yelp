@@ -43,11 +43,15 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         var business = businesses[indexPath.row]
         cell.nameLabel.text = business.name
         cell.addressLabel.text = business.address[0]
+        cell.businessImageView.setImageWithURL(business.imageUrl)
+        cell.businessRatingImageView.setImageWithURL(business.ratingImageUrl)
         
         return cell
     }
     
     func performSearch() {
+        SVProgressHUD.show()
+
         var client = YelpClient(consumerKey: yelpConsumerKey, consumerSecret: yelpConsumerSecret, accessToken: yelpToken, accessSecret: yelpTokenSecret)
         
         client.searchWithTerm("Thai", success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
