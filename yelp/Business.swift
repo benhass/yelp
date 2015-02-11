@@ -15,7 +15,7 @@ class Business: NSObject {
     var reviewCount: Int = 0
     var address: [String] = [""]
     var categories: [[String]] = [[""]]
-    var distance: Float = 0.0
+    var distanceInMeters: Float = 0.0
     
     init(dictionary: NSDictionary) {
         super.init()
@@ -37,7 +37,11 @@ class Business: NSObject {
         self.reviewCount = dictionary.valueForKey("review_count") as Int
         self.address = dictionary.valueForKeyPath("location.address") as [String]
         self.categories = dictionary.valueForKey("categories") as [[String]]
-        self.distance = dictionary.valueForKey("distance") as Float
+        self.distanceInMeters = dictionary.valueForKey("distance") as Float
+    }
+    
+    var distanceInMiles: Float {
+        return distanceInMeters * 0.000621371
     }
     
     class func buildCollection(dictionaries: [NSDictionary]) -> [Business] {

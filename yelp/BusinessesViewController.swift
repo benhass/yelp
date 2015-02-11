@@ -41,10 +41,10 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = businessesTableView.dequeueReusableCellWithIdentifier("BusinessCell") as BusinessCell
         var business = businesses[indexPath.row]
-        cell.nameLabel.text = "some business name that is really, terribly, unneccesarily long"//business.name
-        cell.distanceLabel.text = "0.000621371 miles"
-        cell.reviewCountLabel.text = "1234 reviews"
-        cell.addressLabel.text = "1234 fake street at the corner of get lost avenue"//business.address[0]
+        cell.nameLabel.text = business.name
+        cell.distanceLabel.text = String(format: "%.2f miles", business.distanceInMiles)
+        cell.reviewCountLabel.text = "\(business.reviewCount) reviews"
+        cell.addressLabel.text = business.address[0]
         cell.businessImageView.setImageWithURL(business.imageUrl)
         cell.businessRatingImageView.setImageWithURL(business.ratingImageUrl)
         
