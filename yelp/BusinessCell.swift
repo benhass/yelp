@@ -16,10 +16,14 @@ class BusinessCell: UITableViewCell {
     @IBOutlet weak var businessRatingImageView: UIImageView!
     @IBOutlet weak var reviewCountLabel: UILabel!
     @IBOutlet weak var distanceLabel: UILabel!
-    
+    @IBOutlet weak var categoriesLabel: UILabel!
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        businessImageView.layer.masksToBounds = true
+        businessImageView.layer.cornerRadius = 5
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

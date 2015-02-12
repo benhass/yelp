@@ -44,6 +44,10 @@ class Business: NSObject {
         return distanceInMeters * 0.000621371
     }
     
+    var categoryList: String {
+        return ", ".join(categories.map { $0[0] })
+    }
+    
     class func buildCollection(dictionaries: [NSDictionary]) -> [Business] {
         var businessCollection: [Business] = []
         

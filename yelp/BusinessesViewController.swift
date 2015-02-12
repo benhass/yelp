@@ -25,7 +25,8 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         
         businessesTableView.delegate = self
         businessesTableView.dataSource = self
-        
+        businessesTableView.rowHeight = UITableViewAutomaticDimension
+
         performSearch()
     }
 
@@ -47,6 +48,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         cell.addressLabel.text = business.address[0]
         cell.businessImageView.setImageWithURL(business.imageUrl)
         cell.businessRatingImageView.setImageWithURL(business.ratingImageUrl)
+        cell.categoriesLabel.text = business.categoryList
         
         return cell
     }
