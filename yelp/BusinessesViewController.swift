@@ -33,21 +33,27 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
         
+        // Sets this view controller as presenting view controller for the search interface
+        definesPresentationContext = true
+        
+        navigationItem.titleView = searchController.searchBar
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Filters", style: UIBarButtonItemStyle.Plain, target: self, action: "doSomething")
         // If we are using this same view controller to present the results
         // dimming it out wouldn't make sense.  Should set probably only set
         // this to yes if using another controller to display the search results.
         searchController.dimsBackgroundDuringPresentation = false
         
-        searchController.searchBar.sizeToFit()
-        businessesTableView.tableHeaderView = searchController.searchBar
-        
-        // Sets this view controller as presenting view controller for the search interface
-        definesPresentationContext = true
-        
+        //searchController.searchBar.sizeToFit()
+        searchController.hidesNavigationBarDuringPresentation = false
+
         businessesTableView.rowHeight = UITableViewAutomaticDimension
         businessesTableView.estimatedRowHeight = 100 // fixes rotation bug
         
         performSearch()
+    }
+    
+    func doSomething() {
+        self.performSegueWithIdentifier("filtersSegue", sender: self)
     }
 
     override func didReceiveMemoryWarning() {
@@ -84,9 +90,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         let searchText = searchController.searchBar.text
         
         if searchText != lastSearchText {
-            self.performSearch(term: searchText)
-            self.businessesTableView.reloadData()
-            self.lastSearchText = searchText
+            performSearch(term: searchText)
+            businessesTableView.reloadData()
+            lastSearchText = searchText
         }
     }
 
