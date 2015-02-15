@@ -8,9 +8,12 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UISearchResultsUpdating {
 
     @IBOutlet weak var businessesTableView: UITableView!
+    
+    var searchController: UISearchController!
+    var lastSearchText: String?
     
     let yelpConsumerKey = "TPgBiETMGcmAM_cpPz3tIQ"
     let yelpConsumerSecret = "GDjnbG7F0pxrBcXqVwSZHwzsbcA"
@@ -23,10 +26,27 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        businessesTableView.delegate = self
         businessesTableView.dataSource = self
+        
+        // Initializing with searchResultsController set to nil means that
+        // searchController will use this view controller to display the search results
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        
+        // If we are using this same view controller to present the results
+        // dimming it out wouldn't make sense.  Should set probably only set
+        // this to yes if using another controller to display the search results.
+        searchController.dimsBackgroundDuringPresentation = false
+        
+        searchController.searchBar.sizeToFit()
+        businessesTableView.tableHeaderView = searchController.searchBar
+        
+        // Sets this view controller as presenting view controller for the search interface
+        definesPresentationContext = true
+        
         businessesTableView.rowHeight = UITableViewAutomaticDimension
-
+        businessesTableView.estimatedRowHeight = 100 // fixes rotation bug
+        
         performSearch()
     }
 
@@ -41,28 +61,32 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = businessesTableView.dequeueReusableCellWithIdentifier("BusinessCell") as BusinessCell
-        var business = businesses[indexPath.row]
-        cell.nameLabel.text = business.name
-        cell.distanceLabel.text = String(format: "%.2f miles", business.distanceInMiles)
-        cell.reviewCountLabel.text = "\(business.reviewCount) reviews"
-        cell.addressLabel.text = business.address[0]
-        cell.businessImageView.setImageWithURL(business.imageUrl)
-        cell.businessRatingImageView.setImageWithURL(business.ratingImageUrl)
-        cell.categoriesLabel.text = business.categoryList
+        cell.business = businesses[indexPath.row]
         
         return cell
     }
     
-    func performSearch() {
+    func performSearch(term: String = "") {
         SVProgressHUD.show()
 
         var client = YelpClient(consumerKey: yelpConsumerKey, consumerSecret: yelpConsumerSecret, accessToken: yelpToken, accessSecret: yelpTokenSecret)
         
-        client.searchWithTerm("Thai", success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+        client.searchWithTerm(term, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             self.businesses = Business.buildCollection(response["businesses"] as [NSDictionary])
             self.businessesTableView.reloadData()
+            SVProgressHUD.dismiss()
         }) { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-                println(error)
+            SVProgressHUD.dismiss()
+        }
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchText = searchController.searchBar.text
+        
+        if searchText != lastSearchText {
+            self.performSearch(term: searchText)
+            self.businessesTableView.reloadData()
+            self.lastSearchText = searchText
         }
     }
 

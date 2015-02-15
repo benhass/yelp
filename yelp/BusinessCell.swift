@@ -9,7 +9,8 @@
 import UIKit
 
 class BusinessCell: UITableViewCell {
-    
+
+    var _business: Business!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
     @IBOutlet weak var businessImageView: UIImageView!
@@ -31,5 +32,21 @@ class BusinessCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
+    
+    var business: Business {
+        get {
+            return _business
+        }
+        set(business) {
+            _business = business
+            nameLabel.text = business.name
+            distanceLabel.text = String(format: "%.2f miles", business.distanceInMiles)
+            reviewCountLabel.text = "\(business.reviewCount) reviews"
+            addressLabel.text = (!business.address.isEmpty ? business.address[0] : "")
+            businessImageView.setImageWithURL(business.imageUrl)
+            businessRatingImageView.setImageWithURL(business.ratingImageUrl)
+            categoriesLabel.text = business.categoryList
+        }
+    }
+    
 }

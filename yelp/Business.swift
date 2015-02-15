@@ -36,7 +36,11 @@ class Business: NSObject {
         
         self.reviewCount = dictionary.valueForKey("review_count") as Int
         self.address = dictionary.valueForKeyPath("location.address") as [String]
-        self.categories = dictionary.valueForKey("categories") as [[String]]
+        
+        if var categories = dictionary.valueForKey("categories") as? [[String]] {
+            self.categories = categories
+        }
+        
         self.distanceInMeters = dictionary.valueForKey("distance") as Float
     }
     
@@ -45,6 +49,7 @@ class Business: NSObject {
     }
     
     var categoryList: String {
+
         return ", ".join(categories.map { $0[0] })
     }
     
