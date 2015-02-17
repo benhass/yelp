@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  BusinessesViewController.swift
 //  yelp
 //
 //  Created by Ben Hass on 2/9/15.
@@ -8,51 +8,53 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UISearchResultsUpdating {
-
+class BusinessesViewController: UIViewController, UITableViewDataSource, UISearchResultsUpdating, FiltersViewDelegate {
+    
     @IBOutlet weak var businessesTableView: UITableView!
     
     var searchController: UISearchController!
-    var lastSearchText: String?
     
     let yelpConsumerKey = "TPgBiETMGcmAM_cpPz3tIQ"
     let yelpConsumerSecret = "GDjnbG7F0pxrBcXqVwSZHwzsbcA"
     let yelpToken = "5Knxmf-R8T_1IkXJn4WRoQTq7FgZ4Fst"
     let yelpTokenSecret = "byqYVwYEyYA_iduBFMBHlC7LQlY"
-
+    
     var businesses: [Business]! = []
+    var currentFilters = Filters()
+    var currentSearchText = ""
+    var location = "37.782193,-122.410254"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         businessesTableView.dataSource = self
+        businessesTableView.rowHeight = UITableViewAutomaticDimension
+        businessesTableView.estimatedRowHeight = 100
         
-        // Initializing with searchResultsController set to nil means that
-        // searchController will use this view controller to display the search results
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-        
-        // Sets this view controller as presenting view controller for the search interface
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
         definesPresentationContext = true
         
         navigationItem.titleView = searchController.searchBar
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Filters", style: UIBarButtonItemStyle.Plain, target: self, action: "doSomething")
-        // If we are using this same view controller to present the results
-        // dimming it out wouldn't make sense.  Should set probably only set
-        // this to yes if using another controller to display the search results.
-        searchController.dimsBackgroundDuringPresentation = false
-        
-        //searchController.searchBar.sizeToFit()
-        searchController.hidesNavigationBarDuringPresentation = false
-
-        businessesTableView.rowHeight = UITableViewAutomaticDimension
-        businessesTableView.estimatedRowHeight = 100 // fixes rotation bug
-        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Filters", style: UIBarButtonItemStyle.Plain, target: self, action: "showFiltersView")
+    }
+    
+    override func viewWillAppear(animated: Bool) {
         performSearch()
     }
     
-    func doSomething() {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "filtersSegue" {
+            let navController = segue.destinationViewController as UINavigationController
+            let filtersVC = navController.topViewController as FiltersViewController
+            filtersVC.delegate = self
+            filtersVC.currentFilters = currentFilters
+        }
+    }
+    
+    func showFiltersView() {
         self.performSegueWithIdentifier("filtersSegue", sender: self)
     }
 
@@ -72,28 +74,38 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         return cell
     }
     
-    func performSearch(term: String = "") {
+    func performSearch() {
         SVProgressHUD.show()
-
+        
         var client = YelpClient(consumerKey: yelpConsumerKey, consumerSecret: yelpConsumerSecret, accessToken: yelpToken, accessSecret: yelpTokenSecret)
         
-        client.searchWithTerm(term, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+        var params = [
+            "term": currentSearchText,
+            "ll": location,
+            "sort": currentFilters.sort,
+            "categories_filter": ",".join(currentFilters.categories),
+            "radius_filter": currentFilters.distance,
+            "deals_filter": currentFilters.deals
+        ]
+        
+        client.search(params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             self.businesses = Business.buildCollection(response["businesses"] as [NSDictionary])
             self.businessesTableView.reloadData()
             SVProgressHUD.dismiss()
         }) { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
             SVProgressHUD.dismiss()
+            println(error)
         }
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
         let searchText = searchController.searchBar.text
-        
-        if searchText != lastSearchText {
-            performSearch(term: searchText)
-            businessesTableView.reloadData()
-            lastSearchText = searchText
-        }
+        currentSearchText = searchText
+        performSearch()
+    }
+    
+    func filtersView(viewController: FiltersViewController, didSetFilters filters: Filters) {
+        currentFilters = filters
     }
 
 }

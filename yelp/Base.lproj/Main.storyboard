@@ -138,16 +138,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Filters" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CVm-OO-keq">
-                                <rect key="frame" x="60" y="28" width="47" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="76" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Rx4-P6-UWq">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FilterCell" rowHeight="76" id="4Zd-cA-zVe">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Zd-cA-zVe" id="rPS-kg-nva">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Zf2-cY-kuj" firstAttribute="top" secondItem="Rx4-P6-UWq" secondAttribute="bottom" id="5AQ-sm-lwp"/>
+                            <constraint firstAttribute="trailing" secondItem="Rx4-P6-UWq" secondAttribute="trailing" id="CBA-pE-WDD"/>
+                            <constraint firstItem="Rx4-P6-UWq" firstAttribute="top" secondItem="6fW-kq-vKg" secondAttribute="top" id="dKw-bz-pDc"/>
+                            <constraint firstItem="Rx4-P6-UWq" firstAttribute="leading" secondItem="6fW-kq-vKg" secondAttribute="leading" id="gdU-0F-03u"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="P56-MN-h8s"/>
+                    <connections>
+                        <outlet property="filtersTableView" destination="Rx4-P6-UWq" id="PvH-AB-RFO"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kE4-dL-VI1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

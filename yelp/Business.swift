@@ -1,6 +1,6 @@
 //
 //  Business.swift
-//  rottentomatoes
+//  yelp
 //
 //  Created by Ben Hass on 2/10/15.
 //  Copyright (c) 2015 benhass. All rights reserved.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Business: NSObject {
+class Business {
     var imageUrl: NSURL = NSURL()
     var name: String = ""
     var ratingImageUrl: NSURL = NSURL()
@@ -18,8 +18,6 @@ class Business: NSObject {
     var distanceInMeters: Float = 0.0
     
     init(dictionary: NSDictionary) {
-        super.init()
-        
         if var imageUrl = dictionary.valueForKey("image_url") as? String {
             self.imageUrl = NSURL(string: imageUrl)!
         } else {
