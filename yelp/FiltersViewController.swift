@@ -9,12 +9,11 @@
 import UIKit
 
 protocol FiltersViewDelegate: class {
-    func filtersView(viewController: FiltersViewController, didSetFilters filters: Filters)
+    func filtersView(viewController: FiltersViewController, didSetFilters settings: [String: [String]])
 }
 
 class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    var currentFilters: Filters!
-    
+    var filters = Filters()
     weak var delegate: FiltersViewDelegate?
     
     @IBOutlet weak var filtersTableView: UITableView!
@@ -42,39 +41,31 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func applyFilters() {
-        delegate?.filtersView(self, didSetFilters: currentFilters)
+        delegate?.filtersView(self, didSetFilters: filters.selectedOptions)
         dismissViewControllerAnimated(true, completion: nil)
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var filterName = currentFilters.filterTypes[indexPath.section] as String
-        var filter = currentFilters.filters[filterName] as NSDictionary
-        var filterOptions = filter["options"] as NSDictionary
-        var key = filterOptions.allKeys[indexPath.row] as String
-
+        var filterOption = filters.currentFilters[indexPath.section].options[indexPath.row]
         var cell = filtersTableView.dequeueReusableCellWithIdentifier("FilterCell") as FilterCell
         cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.optionLabel.text = key
-        var selected = currentFilters.hasOptionEnabled(filterName, optionKey: key)
+        cell.optionLabel.text = filterOption.label
 
-        if (selected) {
-            cell.optionState.image = UIImage(named: "CheckedCircle")
+        if (filterOption.selected) {
+            cell.optionState.image = UIImage(named: "Checked")
         } else {
-            cell.optionState.image = UIImage(named: "UncheckedCircle")
+            cell.optionState.image = nil
         }
         
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        var filterName = currentFilters.filterTypes[section] as String
-        var filter = currentFilters.filters[filterName] as NSDictionary
-        var options = filter["options"] as NSDictionary
-        return options.count
+        return filters.currentFilters[section].options.count
     }
     
     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return currentFilters.filterTypes[section] as? String
+        return filters.currentFilters[section].label
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -82,16 +73,12 @@ class FiltersViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return currentFilters.filterTypes.count
+        return filters.currentFilters.count
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var filterName = currentFilters.filterTypes[indexPath.section] as String
-        var filter = currentFilters.filters[filterName] as NSDictionary
-        var filterOptions = filter["options"] as NSDictionary
-        var key = filterOptions.allKeys[indexPath.row] as String
-        
-        currentFilters.enableOption(filterName, optionKey: key)
+        var filter = filters.currentFilters[indexPath.section]
+        filter.setSelected(indexPath.row);
         filtersTableView.reloadData()
     }
 }

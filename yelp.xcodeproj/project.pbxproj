@@ -17,6 +17,8 @@
 		C93528DD1A8AB81400998D10 /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93528DC1A8AB81400998D10 /* BusinessCell.swift */; };
 		C93528DF1A8ACA1000998D10 /* YelpClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93528DE1A8ACA1000998D10 /* YelpClient.swift */; };
 		C93528E81A8AD56600998D10 /* Business.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93528E71A8AD56600998D10 /* Business.swift */; };
+		C93A33301A97AB900077094D /* FilterOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A332F1A97AB900077094D /* FilterOption.swift */; };
+		C93A33321A97AF0A0077094D /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C93A33311A97AF0A0077094D /* Filter.swift */; };
 		C96E7DA31A91301F0044F0BF /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E7DA21A91301F0044F0BF /* FiltersViewController.swift */; };
 		C96E7DA71A91500A0044F0BF /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E7DA61A91500A0044F0BF /* Filters.swift */; };
 		C96E7DAC1A928AB10044F0BF /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C96E7DAA1A928AB10044F0BF /* FilterCell.swift */; };
@@ -50,6 +52,8 @@
 		C93528DE1A8ACA1000998D10 /* YelpClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpClient.swift; sourceTree = "<group>"; };
 		C93528E01A8ACA3400998D10 /* yelp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "yelp-Bridging-Header.h"; sourceTree = "<group>"; };
 		C93528E71A8AD56600998D10 /* Business.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Business.swift; sourceTree = "<group>"; };
+		C93A332F1A97AB900077094D /* FilterOption.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterOption.swift; sourceTree = "<group>"; };
+		C93A33311A97AF0A0077094D /* Filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		C96E7DA21A91301F0044F0BF /* FiltersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		C96E7DA61A91500A0044F0BF /* Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		C96E7DAA1A928AB10044F0BF /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 			children = (
 				C93528E71A8AD56600998D10 /* Business.swift */,
 				C96E7DA61A91500A0044F0BF /* Filters.swift */,
+				C93A332F1A97AB900077094D /* FilterOption.swift */,
+				C93A33311A97AF0A0077094D /* Filter.swift */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -327,6 +333,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C93A33301A97AB900077094D /* FilterOption.swift in Sources */,
+				C93A33321A97AF0A0077094D /* Filter.swift in Sources */,
 				C96E7DA71A91500A0044F0BF /* Filters.swift in Sources */,
 				C96E7DAC1A928AB10044F0BF /* FilterCell.swift in Sources */,
 				C93528BF1A89766300998D10 /* BusinessesViewController.swift in Sources */,

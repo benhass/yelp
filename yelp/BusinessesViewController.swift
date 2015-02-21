@@ -20,7 +20,12 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
     let yelpTokenSecret = "byqYVwYEyYA_iduBFMBHlC7LQlY"
     
     var businesses: [Business]! = []
-    var currentFilters = Filters()
+    var filterSettings: [String: [String]] = [
+        "distance": ["40000"],
+        "sort": ["0"],
+        "deals": ["false"],
+        "categories": [""],
+    ]
     var currentSearchText = ""
     var location = "37.782193,-122.410254"
     
@@ -39,10 +44,11 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         
         navigationItem.titleView = searchController.searchBar
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Filters", style: UIBarButtonItemStyle.Plain, target: self, action: "showFiltersView")
+        performSearch()
     }
     
     override func viewWillAppear(animated: Bool) {
-        performSearch()
+
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -50,7 +56,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
             let navController = segue.destinationViewController as UINavigationController
             let filtersVC = navController.topViewController as FiltersViewController
             filtersVC.delegate = self
-            filtersVC.currentFilters = currentFilters
+            filtersVC.filters.selectOptions(filterSettings)
         }
     }
     
@@ -67,6 +73,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         return businesses.count
     }
     
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell = businessesTableView.dequeueReusableCellWithIdentifier("BusinessCell") as BusinessCell
         cell.business = businesses[indexPath.row]
@@ -82,10 +89,10 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         var params = [
             "term": currentSearchText,
             "ll": location,
-            "sort": currentFilters.sort,
-            "categories_filter": ",".join(currentFilters.categories),
-            "radius_filter": currentFilters.distance,
-            "deals_filter": currentFilters.deals
+            "sort": filterSettings["sort"]![0],
+            "category_filter": ",".join(filterSettings["categories"]!),
+            "radius_filter": filterSettings["distance"]![0],
+            "deals_filter": filterSettings["deals"]![0]
         ]
         
         client.search(params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -104,8 +111,9 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UISearc
         performSearch()
     }
     
-    func filtersView(viewController: FiltersViewController, didSetFilters filters: Filters) {
-        currentFilters = filters
+    func filtersView(viewController: FiltersViewController, didSetFilters settings: [String: [String]]) {
+        self.filterSettings = settings
+        performSearch()
     }
 
 }
